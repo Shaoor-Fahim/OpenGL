@@ -1,0 +1,207 @@
+
+#include <windows.h>  
+#include <GL/glut.h>
+#include<iostream>
+#include<math.h>
+
+
+int a, b, c = 0;
+float energy = 0.5;
+float u[10][10][10];
+
+
+float k = 384.1;
+float cz = 0.385;
+float row = 8940;
+float alpha = k / (cz * row);
+
+
+void heat()
+{
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			for (int k = 0; k < 10; k++)
+			{
+				if (i = 0, j = 0, k = 0)
+				{
+					u[i][j][k] = u[i][j][k] + alpha * (u[i + 2][j][k] - 2 * u[i + 1][j][k] + u[i][j][k] +
+													   u[i][j + 2][k] - 2 * u[i][j][k] + u[i][j][k] +
+													   u[i][j][k + 2] - 2 * u[i][j][k + 1] + u[i][j][k]);
+
+				}
+				if (i = 1, j = 0, k = 0)
+				{
+					u[i][j][k] = u[i][j][k] + alpha * (u[i][j][k] - 2 * u[i - 1][j][k] + u[i - 2][j][k] +
+													   u[i][j + 2][k] - 2 * u[i][j + 1][k] + u[i][j][k] +
+													   u[i][j][k + 2] - 2 * u[i][j][k + 1] + u[i][j][k]);
+
+				}
+				if (i = 0, j = 1, k = 0)
+				{
+					u[i][j][k] = u[i][j][k] + alpha * (u[i + 2][j][k] - 2 * u[i + 1][j][k] + u[i][j][k] +
+													   u[i][j][k] - 2 * u[i][j - 1][k] + u[i][j - 2][k] +
+													   u[i][j][k + 2] - 2 * u[i][j][k + 1] + u[i][j][k]);
+
+				}
+				if (i = 0, j = 0, k = 1)
+				{
+					u[i][j][k] = u[i][j][k] + alpha * (u[i + 2][j][k] - 2 * u[i + 1][j][k] + u[i][j][k] +
+													   u[i][j + 2][k] - 2 * u[i][j + 1][k] + u[i][j][k] +
+													   u[i][j][k] - 2 * u[i][j][k - 1] + u[i][j][k - 2]);
+
+				}
+				if (i = 1, j = 1, k = 0)
+				{
+					u[i][j][k] = u[i][j][k] + alpha * (u[i][j][k] - 2 * u[i - 1][j][k] + u[i - 2][j][k] +
+													   u[i][j][k] - 2 * u[i][j - 1][k] + u[i][j - 2][k] +
+								    				   u[i][j][k + 1] - 2 * u[i][j][k + 1] + u[i][j][k]);
+
+				}
+				if (i = 1, j = 1, k = 1)
+				{
+					u[i][j][k] = u[i][j][k] + alpha * (u[i][j][k] - 2 * u[i - 1][j][k] + u[i - 2][j][k] +
+													   u[i][j][k] - 2 * u[i][j - 1][k] + u[i][j - 2][k] +
+													   u[i][j][k] - 2 * u[i][j][k - 1] + u[i][j][k - 2]);
+
+				}
+				if (i = 0, j = 1, k = 1)
+				{
+					u[i][j][k] = u[i][j][k] + alpha * (u[i][j][k] - 2 * u[i + 1][j][k] + u[i - 2][j][k] +
+													   u[i][j][k] - 2 * u[i][j - 1][k] + u[i][j - 2][k] +
+													   u[i][j][k] - 2 * u[i][j][k - 1] + u[i][j][k - 2]);
+
+				}
+				if (i = 1, j = 0, k = 1)
+				{
+					u[i][j][k] = u[i][j][k] + alpha * (u[i][j][k] - 2 * u[i - 1][j][k] + u[i - 2][j][k] +
+													   u[i][j][k] - 2 * u[i][j + 1][k] + u[i][j + 2][k] +
+													   u[i][j][k] - 2 * u[i][j][k - 1] + u[i][j][k - 2]);
+
+				}
+			}
+			b++;
+			c = 0;
+		}
+		a++;
+		b = 0;
+		c = 0;
+	}
+	printf("%f", u[0][0][0]);
+}
+void display() {
+
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	for (float i = -0.5; i < 0.4; i = i + 0.1)
+	{
+		for (float y = -0.5; y < 0.4; y = y + 0.1)
+		{
+			for (float z = -0.5; z < 0.4; z = z + 0.1)
+			{
+				glBegin(GL_QUADS);
+				glColor3f(0, 0, 1);
+				glVertex3f(i, y, z); //
+				glColor3f(1, 0, 0);
+				glVertex3f(i, y + 0.1, z); //+++
+				glColor3f(0, 1, 0);
+				glVertex3f(i + 0.1, y + 0.1, z); //+-+
+				glColor3f(0, 1, 1);
+				glVertex3f(i + 0.1, y, z); //--+
+
+				glColor3f(1, 0, 1);
+				glVertex3f(i, y, -z); //-++
+				glColor3f(0, 1, 1);
+				glVertex3f(i, y + 0.1, -z); //+++
+				glColor3f(1, 1, 1);
+				glVertex3f(i + 0.1, y + 0.1, -z); //+-+
+				glColor3f(0, 0, .1);
+				glVertex3f(i + 0.1, y, -z); //--+
+
+				glColor3f(0.1, 0, 0);
+				glVertex3f(i, y, z); //
+				glColor3f(0, 0.1, .1);
+				glVertex3f(i, y, -z); //-++
+				glColor3f(0.1, 0, 0.1);
+				glVertex3f(i, y + 0.1, -z); //
+				glColor3f(0.1, 0.1, 0.1);
+				glVertex3f(i, y + 0.1, z); //+++
+
+				glColor3f(0, 0.1, 1);
+				glVertex3f(i + 0.1, y + 0.1, z); //+-+
+				glColor3f(0.1, 0, 0.1);
+				glVertex3f(i + 0.1, y + 0.1, -z); //+-+
+				glColor3f(0, 0, .2);
+				glVertex3f(i + 0.1, y, -z); //--+
+				glColor3f(0, 0.4, .3);
+				glVertex3f(i + 0.1, y, z); //--+
+
+				glColor3f(0.6, 0.2, 1);
+				glVertex3f(i, y, z); //
+				glColor3f(0.3, 0.2, .1);
+				glVertex3f(i, y, -z); //
+				glColor3f(0.5, 0.9, .3);
+				glVertex3f(i + 0.1, y, -z); //+-+
+				glColor3f(0.6, 0.6, .6);
+				glVertex3f(i + 0.1, y, z); //+-+
+
+				glColor3f(0.5, 0.5, 0.5);
+				glVertex3f(i, y + 0.1, z); //+++
+				glColor3f(0.6, 0.6, .6);
+				glVertex3f(i, y + 0.1, -z); //+++
+				glColor3f(0.8, 0.8, .8);
+				glVertex3f(i + 0.1, y + 0.1, -z); //+-+
+				glColor3f(0, 1, 1);
+				glVertex3f(i + 0.1, y + 0.1, z); //+-+
+
+
+				glEnd();
+				if (a < 10)
+				{
+					u[a][b][c] = energy;
+				}
+				c++;
+			}
+			b++;
+			c = 0;
+			energy++;
+		}
+		a++;
+		c = 0;
+		b = 0;
+	}
+	glBegin(GL_QUADS);
+
+	glVertex3f(-0.5, -0.5, -0.5); //
+	glVertex3f(-0.5, -0.5 + 0.1, -0.5); //
+	glVertex3f(-0.5 + 0.1, -0.5 + 0.1, -0.5); //
+	glVertex3f(-0.5 + 0.1, -0.5, -0.5); //
+
+	glEnd();
+	glFlush();
+}
+
+
+void timer(int x)
+{
+
+	glRotatef(10, 1, 1, 0);
+	//heat();
+	glutPostRedisplay();
+	glutTimerFunc(1000 / 25., timer, 0);
+}
+
+
+int main(int argc, char** argv) {
+	glutInit(&argc, argv);
+	glutCreateWindow("OpenGL Setup Test");
+	glutInitWindowSize(320, 320);
+	glutInitWindowPosition(50, 50);
+	glutDisplayFunc(display);
+	glutTimerFunc(1000 / 25., timer, 0);
+	glutMainLoop();
+
+}
